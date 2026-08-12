@@ -1,6 +1,0 @@
-{% extends 'diagnosis/base.html' %}
-{% block title %}Profile — CropCare AI{% endblock %}
-{% block content %}
-<section class="page-head"><div class="container"><span class="eyebrow">Farmer profile</span><h1>Your account details</h1><p>Keep contact and location information up to date for expert guidance.</p></div></section>
-<section class="container narrow-section"><div class="form-card"><form method="post">{% csrf_token %}<div class="form-grid">{% for field in form %}<div class="field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<small class="error-text">{{ error }}</small>{% endfor %}</div>{% endfor %}</div><button class="button button-primary" type="submit">Save profile</button></form></div></section>
-{% endblock %}
