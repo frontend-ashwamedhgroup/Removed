@@ -1,0 +1,33 @@
+CropCare AI — Updated Keras Model Integration
+=============================================
+
+This build is based on CropCare AI Fixed v4 — Real-World Prediction.
+
+Integrated model
+----------------
+- New attached model: plant_disease_model(2).keras
+- Installed project name: ml_models/plant_disease_model.keras
+- Input: 224x224 RGB
+- Output: 161 classes
+- Keras: 3.15.0
+- Architecture: MobileNetV2
+
+What changed
+------------
+1. Replaced the previous 38-output model with the new 161-output model.
+2. Added model-archive inspection before TensorFlow loads.
+3. Added hard prevention against old/wrong label maps.
+4. Added install_model_labels management command.
+5. Added install_updated_model_labels_windows.bat.
+6. Improved crop/disease parsing for plain labels such as:
+      tomato early blight
+      apple black rot
+      bell pepper bacterial spot
+   as well as PlantVillage labels such as Tomato___Early_blight.
+7. Kept the Real-World Prediction multi-view/crop-restriction workflow.
+
+Required final label step
+-------------------------
+The Keras archive has 161 numerical outputs but does not contain the textual
+class-name order. Use the class_names.json saved by the exact training run.
+This is necessary for correct prediction names.

@@ -1,0 +1,33 @@
+CropCare AI v4 - Real-World Prediction Update
+
+Why Google/field images were often wrong
+----------------------------------------
+The supplied model was trained and validated on the provided dataset at 224x224.
+Its Django preprocessing already matched the training notebook. The main issue is
+domain shift: web/field photos have different backgrounds, lighting, framing and
+may contain crops not present in the model's 38 classes.
+
+What changed
+------------
+1. Optional known-crop selector on New diagnosis. This is strongly recommended
+   for Google/field photos and prevents cross-crop predictions.
+2. Five-view test-time augmentation: full resize, center crop, horizontal flip,
+   vertical flip and autocontrast. Probabilities are averaged for stability.
+3. Consistency checks: low confidence, small top-two margin, unstable crop across
+   views, or weak support for a selected crop causes an Uncertain result rather
+   than an overconfident wrong diagnosis.
+4. Batch results explain the reliability checks used.
+5. CSV export records the selected crop.
+
+Important limitation
+--------------------
+This improves inference robustness but cannot create disease knowledge the model
+never learned. The model supports only the crops/classes in ml_models/class_names.json.
+For professional field accuracy, retrain/fine-tune on a real-world dataset and
+local field photographs, then evaluate on a separate real-world test set.
+
+Upgrade
+-------
+Copy your existing db.sqlite3 and media folder into this project, then run:
+    repair_environment.bat
+The new migration adds only DiagnosisBatch.crop_hint and does not delete existing data.

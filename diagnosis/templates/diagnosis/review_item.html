@@ -1,0 +1,13 @@
+{% extends 'diagnosis/base.html' %}
+{% block title %}Review diagnosis — CropCare AI{% endblock %}
+{% block content %}
+<section class="page-head"><div class="container"><a class="back-link" href="{% url 'review_queue' %}">← Review queue</a><span class="eyebrow">Expert review</span><h1>{{ item.crop_name }} — {{ item.disease_name }}</h1><p>{{ item.batch.farmer.get_full_name|default:item.batch.farmer.username }} · {{ item.original_name }}</p></div></section>
+<section class="container review-layout">
+    <div class="review-evidence">
+        {% if item.image %}<img class="review-image" src="{{ item.image.url }}" alt="Crop evidence">{% endif %}
+        <div class="panel compact"><h3>AI evidence</h3><p><strong>Confidence:</strong> {{ item.confidence|floatformat:2 }}%</p>{% for pred in item.top_predictions %}<div class="prediction-bar"><span>{{ pred.display_name }}</span><div><i style="width: {{ pred.confidence }}%"></i></div><strong>{{ pred.confidence }}%</strong></div>{% endfor %}</div>
+        <div class="panel compact"><h3>Farmer notes</h3><p>{{ item.batch.notes|default:"No field notes supplied." }}</p></div>
+    </div>
+    <div class="form-card review-form"><h2>Publish reviewed guidance</h2><form method="post">{% csrf_token %}{% for field in form %}<div class="field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<small class="error-text">{{ error }}</small>{% endfor %}</div>{% endfor %}<div class="notice-warning">Do not enter an unverified pesticide dose. Refer to the locally registered product label and applicable crop guidance.</div><button class="button button-primary button-full" type="submit">Save and publish review</button></form></div>
+</section>
+{% endblock %}

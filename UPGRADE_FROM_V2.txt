@@ -1,0 +1,26 @@
+CROPCARE AI FIXED V3 — UPGRADE FROM FIXED V2
+================================================
+
+This version keeps the model, files/folder upload and diagnosis workflow from
+Fixed v2. The account workflow has changed:
+
+- Public farmer self-registration is disabled.
+- A logged-in Django superuser is required to create every farmer account.
+- Creating a farmer no longer logs the administrator out or switches the session.
+- Administrator and farmer accounts use the same secure login page.
+- The administrator receives a dedicated dashboard and farmer-registration page.
+
+UPGRADE WITHOUT LOSING DATA
+---------------------------
+1. Stop the old server with Ctrl+C.
+2. Extract this ZIP into a new folder.
+3. Copy these from the old Fixed v2 project into the new folder:
+       db.sqlite3
+       media\
+4. Do not copy the old venv folder.
+5. Run repair_environment.bat.
+6. Run run_windows.bat.
+7. Sign in using the existing Django superuser username and password.
+
+If no administrator exists, repair_environment.bat will ask you to create one.
+The website cannot start through run_windows.bat until an active superuser exists.

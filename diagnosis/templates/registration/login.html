@@ -1,0 +1,23 @@
+{% extends 'diagnosis/base.html' %}
+{% block title %}Sign in — CropCare AI{% endblock %}
+{% block content %}
+<section class="auth-section"><div class="container auth-grid">
+    <div class="auth-copy">
+        <span class="eyebrow">Secure portal access</span>
+        <h1>Administrator and farmer sign in.</h1>
+        <p>The main administrator signs in first and creates every farmer account. Public farmer self-registration is disabled.</p>
+        <div class="notice-warning"><strong>Note:</strong> use the username and password provided by your administrator.</div>
+    </div>
+    <div class="form-card"><h2>Account login</h2>
+        {% if form.errors %}<div class="form-error">Username or password is incorrect.</div>{% endif %}
+        {% if next and user.is_authenticated %}<div class="form-error">Your account does not have permission to open that page.</div>{% endif %}
+        <form method="post">{% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            <div class="field"><label for="id_username">Username</label>{{ form.username }}</div>
+            <div class="field"><label for="id_password">Password</label>{{ form.password }}</div>
+            <button class="button button-primary button-full" type="submit">Sign in</button>
+        </form>
+        <p class="form-foot">Farmer accounts are created only by the logged-in main administrator.</p>
+    </div>
+</div></section>
+{% endblock %}

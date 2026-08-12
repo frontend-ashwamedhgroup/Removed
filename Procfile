@@ -1,0 +1,1 @@
+web: sh -c "python manage.py migrate --noinput && python manage.py seed_treatment_guides && python manage.py collectstatic --noinput && exec gunicorn plant_disease_portal.wsgi:application --bind 0.0.0.0:$PORT"

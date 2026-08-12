@@ -1,0 +1,35 @@
+{% extends 'diagnosis/base.html' %}
+{% block title %}Admin dashboard — CropCare AI{% endblock %}
+{% block content %}
+<section class="page-head"><div class="container page-head-row"><div><span class="eyebrow">Administration dashboard</span><h1>Hello, {{ user.first_name|default:user.username }}.</h1><p>Create farmer accounts, monitor submitted cases and publish reviewed guidance.</p></div>{% if user.is_superuser %}<a class="button button-primary" href="{% url 'register' %}">＋ Register farmer</a>{% endif %}</div></section>
+<section class="container dashboard-section">
+    <div class="stat-grid">
+        <div class="stat-card"><span>Registered farmers</span><strong>{{ stats.farmers|default:0 }}</strong></div>
+        <div class="stat-card"><span>Total diagnosis batches</span><strong>{{ stats.batches|default:0 }}</strong></div>
+        <div class="stat-card"><span>Awaiting expert review</span><strong>{{ stats.pending|default:0 }}</strong></div>
+    </div>
+    <div class="admin-action-grid">
+        {% if user.is_superuser %}<a class="admin-action-card" href="{% url 'register' %}"><span>👨‍🌾</span><div><strong>Register farmer</strong><small>Create username, password and farmer profile.</small></div></a>{% endif %}
+        <a class="admin-action-card" href="{% url 'review_queue' %}"><span>🩺</span><div><strong>Review diagnoses</strong><small>Confirm or correct AI results and publish guidance.</small></div></a>
+        <a class="admin-action-card" href="{% url 'admin:index' %}"><span>⚙️</span><div><strong>Django administration</strong><small>Manage users, treatment guides and project records.</small></div></a>
+    </div>
+
+    <div class="panel">
+        <div class="panel-head"><div><h2>Recent diagnosis batches</h2><p>Open any batch to inspect all submitted images and pages.</p></div></div>
+        {% if recent_batches %}
+        <div class="table-wrap"><table><thead><tr><th>Batch</th><th>Farmer</th><th>Date</th><th>Results</th><th>Pending</th><th>Status</th><th></th></tr></thead><tbody>
+        {% for batch in recent_batches %}<tr><td><strong>{{ batch.title }}</strong><small>{{ batch.original_file_count }} uploaded file{{ batch.original_file_count|pluralize }}</small></td><td>{{ batch.farmer.get_full_name|default:batch.farmer.username }}<small>@{{ batch.farmer.username }}</small></td><td>{{ batch.created_at|date:"d M Y, h:i A" }}</td><td>{{ batch.total_items }}</td><td>{{ batch.pending_items }}</td><td><span class="badge badge-{{ batch.status }}">{{ batch.get_status_display }}</span></td><td><a class="table-link" href="{% url 'batch_detail' batch.id %}">View →</a></td></tr>{% endfor %}
+        </tbody></table></div>
+        {% else %}<div class="empty-state"><div>📋</div><h3>No farmer submissions yet</h3><p>Register a farmer and give them their login credentials.</p></div>{% endif %}
+    </div>
+
+    <div class="panel farmer-list-panel">
+        <div class="panel-head"><div><h2>Recently registered farmers</h2><p>Only the main superuser can create additional farmer accounts.</p></div></div>
+        {% if recent_farmers %}
+        <div class="table-wrap"><table><thead><tr><th>Name</th><th>Username</th><th>Location</th><th>Registered</th></tr></thead><tbody>
+        {% for profile in recent_farmers %}<tr><td><strong>{{ profile.user.get_full_name|default:profile.user.username }}</strong><small>{{ profile.user.email }}</small></td><td>{{ profile.user.username }}</td><td>{{ profile.village|default:"—" }}{% if profile.district %}, {{ profile.district }}{% endif %}</td><td>{{ profile.created_at|date:"d M Y" }}</td></tr>{% endfor %}
+        </tbody></table></div>
+        {% else %}<div class="empty-state"><div>🌱</div><h3>No registered farmers</h3>{% if user.is_superuser %}<a class="button button-primary" href="{% url 'register' %}">Register first farmer</a>{% endif %}</div>{% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,13 @@
+CropCare AI — updated model (3)
+
+Source upload: plant_disease_model(3).keras
+Installed as: ml_models/plant_disease_model.keras
+SHA-256: dd227e1499204252cc0e44dfa0dcf75142d7ba87c7f8ee8bf919087bc8c0f26d
+Input: 224 x 224 x 3 RGB
+Output classes: 161
+Saved Keras version: 3.15.0
+Saved date: 2026-08-11@17:45:42
+
+This file is byte-for-byte identical to the previously supplied plant_disease_model(2).keras.
+Therefore the same exact 161-class class_names.json used with model (2) is valid for model (3).
+Do not use the original 38-class v4 JSON with this model.

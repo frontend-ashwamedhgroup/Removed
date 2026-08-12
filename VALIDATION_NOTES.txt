@@ -1,0 +1,21 @@
+CROPCARE AI FIXED V3 — VALIDATION NOTES
+========================================
+
+Account-control changes:
+- Registration view requires authentication.
+- Registration additionally requires is_superuser=True.
+- Anonymous users cannot create farmer accounts.
+- Normal farmers and staff-only reviewers cannot create farmer accounts.
+- Creating a farmer preserves the administrator's logged-in session.
+- Public navigation and login pages contain no self-registration link.
+- Admin dashboard includes farmer creation, review queue and Django admin access.
+- run_windows.bat refuses to start when no active superuser exists.
+
+Preserved Fixed v2 features:
+- Keras 3.15 compatibility model loader and weights fallback.
+- 38 class labels and supplied model.
+- Multiple individual file upload and complete folder upload.
+- PDF, TIFF, ZIP, DOCX and PPTX extraction.
+- Farmer diagnosis history, CSV export and expert review.
+
+No database migration is required because no model field was changed.

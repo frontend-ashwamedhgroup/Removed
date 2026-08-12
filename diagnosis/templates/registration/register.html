@@ -1,0 +1,54 @@
+{% extends 'diagnosis/base.html' %}
+{% block title %}Register farmer — CropCare AI{% endblock %}
+{% block content %}
+<section class="page-head"><div class="container page-head-row">
+    <div><span class="eyebrow">Administrator-only registration</span><h1>Create a farmer login.</h1><p>You are signed in as <strong>{{ user.username }}</strong>. Set the farmer's username and password. The assigned password remains available only to the main administrator in the table below.</p></div>
+    <a class="button button-secondary" href="{% url 'dashboard' %}">← Admin dashboard</a>
+</div></section>
+<section class="container dashboard-section">
+    <div class="stat-grid">
+        <div class="stat-card"><span>Registered farmers</span><strong>{{ farmer_count|default:0 }}</strong></div>
+        <div class="stat-card"><span>Account creator</span><strong class="stat-text">Main admin</strong></div>
+        <div class="stat-card"><span>Public registration</span><strong class="stat-text">Disabled</strong></div>
+    </div>
+    <div class="auth-grid auth-grid-wide admin-register-grid">
+        <div class="auth-copy">
+            <span class="eyebrow">Controlled onboarding</span>
+            <h2>Only the administrator can add farmers.</h2>
+            <p>After creation, the farmer signs in through the normal login page and can upload files or folders, view diagnoses, and receive expert guidance.</p>
+            <div class="notice-warning"><strong>Security:</strong> use a unique farmer password. It is stored encrypted and is visible only on this superuser-only page. Keep <code>DJANGO_SECRET_KEY</code> private and unchanged.</div>
+        </div>
+        <div class="form-card"><h2>Farmer account details</h2>
+            <form method="post">{% csrf_token %}
+                {% if form.non_field_errors %}<div class="form-error">{{ form.non_field_errors }}</div>{% endif %}
+                <div class="form-grid">
+                {% for field in form %}<div class="field {% if field.name == 'password1' or field.name == 'password2' %}field-wide{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<small class="error-text">{{ error }}</small>{% endfor %}{% if field.help_text %}<small class="help-text">{{ field.help_text|safe }}</small>{% endif %}</div>{% endfor %}
+                </div>
+                <button class="button button-primary button-full" type="submit">Create farmer account</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="panel farmer-list-panel">
+        <div class="panel-head"><div><h2>Recently registered farmers</h2><p>Farmer passwords remain available here to the logged-in main administrator.</p></div></div>
+        {% if recent_farmers %}
+        <div class="table-wrap"><table><thead><tr><th>Farmer</th><th>Username</th><th>Password</th><th>Location</th><th>Registered</th></tr></thead><tbody>
+        {% for profile in recent_farmers %}
+        <tr>
+            <td><strong>{{ profile.user.get_full_name|default:profile.user.username }}</strong><small>{{ profile.user.email }}</small></td>
+            <td><code>{{ profile.user.username }}</code></td>
+            <td>
+                <div class="credential-cell">
+                    <code class="farmer-password" id="farmer-password-{{ profile.pk }}">{{ profile.visible_login_password }}</code>
+                    {% if profile.encrypted_login_password %}<button class="credential-copy" type="button" data-copy-target="farmer-password-{{ profile.pk }}">Copy</button>{% endif %}
+                </div>
+            </td>
+            <td>{{ profile.village|default:"—" }}{% if profile.district %}, {{ profile.district }}{% endif %}</td>
+            <td>{{ profile.created_at|date:"d M Y, h:i A" }}</td>
+        </tr>
+        {% endfor %}
+        </tbody></table></div>
+        {% else %}<div class="empty-state"><div>👨‍🌾</div><h3>No farmer accounts yet</h3><p>Create the first farmer using the form above.</p></div>{% endif %}
+    </div>
+</section>
+{% endblock %}

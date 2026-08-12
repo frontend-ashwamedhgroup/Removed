@@ -1,0 +1,20 @@
+{% extends 'diagnosis/base.html' %}
+{% block title %}Dashboard — CropCare AI{% endblock %}
+{% block content %}
+<section class="page-head"><div class="container page-head-row"><div><span class="eyebrow">Farmer dashboard</span><h1>Hello, {{ user.first_name|default:user.username }}.</h1><p>Manage crop diagnosis batches and expert feedback.</p></div><a class="button button-primary" href="{% url 'upload_diagnosis' %}">＋ New diagnosis</a></div></section>
+<section class="container dashboard-section">
+    <div class="stat-grid">
+        <div class="stat-card"><span>Total batches</span><strong>{{ stats.batches|default:0 }}</strong></div>
+        <div class="stat-card"><span>Images/pages</span><strong>{{ stats.diagnoses|default:0 }}</strong></div>
+        <div class="stat-card"><span>Awaiting review</span><strong>{{ stats.pending|default:0 }}</strong></div>
+    </div>
+    <div class="panel">
+        <div class="panel-head"><div><h2>Recent diagnosis batches</h2><p>Open a batch for images, guidance and admin notes.</p></div></div>
+        {% if batches %}
+        <div class="table-wrap"><table><thead><tr><th>Batch</th><th>Date</th><th>Results</th><th>Disease flags</th><th>Pending</th><th>Status</th><th></th></tr></thead><tbody>
+        {% for batch in batches %}<tr><td><strong>{{ batch.title }}</strong><small>{{ batch.original_file_count }} uploaded file{{ batch.original_file_count|pluralize }}</small></td><td>{{ batch.created_at|date:"d M Y, h:i A" }}</td><td>{{ batch.total_items }}</td><td>{{ batch.disease_items }}</td><td>{{ batch.pending_items }}</td><td><span class="badge badge-{{ batch.status }}">{{ batch.get_status_display }}</span></td><td><a class="table-link" href="{% url 'batch_detail' batch.id %}">View →</a></td></tr>{% endfor %}
+        </tbody></table></div>
+        {% else %}<div class="empty-state"><div>🌱</div><h3>No diagnosis records yet</h3><p>Upload your first crop image or document batch.</p><a class="button button-primary" href="{% url 'upload_diagnosis' %}">Start first diagnosis</a></div>{% endif %}
+    </div>
+</section>
+{% endblock %}
