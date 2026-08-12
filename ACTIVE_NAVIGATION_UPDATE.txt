@@ -1,19 +1,1 @@
-CROPCARE AI — ACTIVE NAVIGATION UPDATE (v4)
-============================================
 
-This version changes only navigation highlighting.
-
-The currently open page is shown as a green pill with white text:
-- Home
-- Admin dashboard
-- Register farmer
-- Review queue (also remains highlighted while reviewing an individual item)
-- Django admin
-
-The permanent green style was removed from Register farmer. It now becomes green
-only while the Register farmer page is open.
-
-Farmer navigation follows the same behavior for Home, Dashboard, New diagnosis,
-and Profile.
-
-No database, model, upload, farmer-registration, diagnosis or review logic was changed.
